@@ -50,7 +50,6 @@ public class LikeablePersonService {
     public void delete(Integer id){
         LikeablePerson likeablePerson = likeablePersonRepository.getReferenceById(id);
         System.out.println(likeablePerson);
-        //likeablePersonRepository.deleteById(id);
         likeablePersonRepository.delete(likeablePerson);
     }
 
