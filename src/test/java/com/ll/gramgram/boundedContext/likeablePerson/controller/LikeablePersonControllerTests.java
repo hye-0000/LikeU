@@ -1,6 +1,7 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 
+import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class LikeablePersonControllerTests {
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private LikeablePersonService likeablePersonService;
 
     @Test
     @DisplayName("등록 폼(인스타 인증을 안해서 폼 대신 메세지)")
@@ -148,5 +152,28 @@ public class LikeablePersonControllerTests {
                         <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
                         """.stripIndent().trim())));
         ;
+    }
+
+    @Test
+    @DisplayName("호감삭제")
+    @WithUserDetails("user3")
+    void t006() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(
+                        post("/likeablePerson/delete/1")
+                                .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/likeablePerson/list**"))
+        ;
+        assertThat(likeablePersonService.findById(1).isPresent()).isEqualTo(false);
     }
 }
