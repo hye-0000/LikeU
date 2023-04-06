@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/likeablePerson")
@@ -64,13 +65,18 @@ public class LikeablePersonController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id){
         InstaMember instaMember = rq.getMember().getInstaMember();  //현재 로그인 된 멤버
-        InstaMember deleteLikeablePerson = likeablePersonService.findById(id).orElseThrow().getFromInstaMember(); //넘어온  id로 삭제할 객체
+        LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null); //넘어온  id로 삭제할 객체
 
-        if(instaMember.getId() == deleteLikeablePerson.getId()){
-            likeablePersonService.delete(id);
-            return rq.redirectWithMsg("/likeablePerson/list", "삭제가 완료되었습니다.");
+        if(likeablePerson == null) return rq.historyBack("이미 취소된 호감입니다!");
+
+        if(!Objects.equals(instaMember.getId(), likeablePerson.getFromInstaMember().getId())){
+            return rq.redirectWithMsg("/likeablePerson/list", "해당 호감을 삭제할 권한이 없습니다.");
         }
 
-        return rq.redirectWithMsg("/likeablePerson/list", "해당 호감을 삭제할 권한이 없습니다.");
+        RsData deleteRs = likeablePersonService.delete(id);
+
+        if(deleteRs.isFail()) return rq.historyBack(deleteRs);
+
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
 }

@@ -47,10 +47,12 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public void delete(Integer id){
+    public RsData delete(Integer id){
         LikeablePerson likeablePerson = likeablePersonRepository.getReferenceById(id);
-        System.out.println(likeablePerson);
+        String toInstaMemberUsername = likeablePerson.getToInstaMember().getUsername();
         likeablePersonRepository.delete(likeablePerson);
+
+        return RsData.of("S-1", "%s님에 대한 호감을 취소하셨습니다.".formatted(toInstaMemberUsername));
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
