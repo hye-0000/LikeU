@@ -5,6 +5,7 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
+import com.ll.gramgram.boundedContext.member.entity.Member;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -65,18 +66,14 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id){
-        InstaMember instaMember = rq.getMember().getInstaMember();  //현재 로그인 된 멤버
+        Member user = rq.getMember();  //현재 로그인 된 멤버
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null); //넘어온  id로 삭제할 객체
 
-        if(likeablePerson == null) return rq.historyBack("이미 취소된 호감입니다!");
+        RsData deletePermissionRsData = likeablePersonService.checkDeletePermission(user, likeablePerson);
 
-        if(!Objects.equals(instaMember.getId(), likeablePerson.getFromInstaMember().getId())){
-            return rq.redirectWithMsg("/likeablePerson/list", "해당 호감을 삭제할 권한이 없습니다.");
-        }
+        if (deletePermissionRsData.isFail()) return rq.historyBack(deletePermissionRsData);
 
         RsData deleteRs = likeablePersonService.delete(id);
-
-        if(deleteRs.isFail()) return rq.historyBack(deleteRs);
 
         return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
