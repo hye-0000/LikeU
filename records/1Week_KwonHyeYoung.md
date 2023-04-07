@@ -102,3 +102,43 @@ delete내에서 너무 많은 일이 일어나서 다시 컨트롤러단에 코�
 코드 리뷰에도 컨트롤러단에서 메시지가 처리돼 통일성이 떨어져 보인다는 같은 고민을 남겨주셔서 고민하고 있던 찰나에
 강사님이 올려주신 영상에 서비스단에서 그냥 메소드를 하나 만들어버려서 처리하는 것을 보고 같은 방식으로 리팩토링 했다.<br>
 아직 상황이 생겼을 때 유연하게 대처하는 방법이 부족한 것 같다 😥
+
+4. Literally Refactoring
+```java
+//controller
+@PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") Integer id){
+        InstaMember instaMember = rq.getMember().getInstaMember();  //현재 로그인 된 멤버
+        LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null); //넘어온  id로 삭제할 객체
+
+        if(likeablePerson == null) return rq.historyBack("이미 취소된 호감입니다!");
+
+        if(!Objects.equals(instaMember.getId(), likeablePerson.getFromInstaMember().getId())){
+            return rq.redirectWithMsg("/likeablePerson/list", "해당 호감을 삭제할 권한이 없습니다.");
+        }
+
+        RsData deleteRs = likeablePersonService.delete(id);
+
+        if(deleteRs.isFail()) return rq.historyBack(deleteRs);
+
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
+    }
+```
+```java
+//service
+@Transactional
+    public RsData delete(Integer id){
+        LikeablePerson likeablePerson = likeablePersonRepository.getReferenceById(id);
+        String toInstaMemberUsername = likeablePerson.getToInstaMember().getUsername();
+        likeablePersonRepository.delete(likeablePerson);
+
+        return RsData.of("S-1", "%s님에 대한 호감을 취소하셨습니다.".formatted(toInstaMemberUsername));
+    }
+```
+원래는 컨트롤러단에서 id 값만을 가지고 delete를 수행하게 만들었다. 그래서 서비스단에서 쿼리를 한번 덜 날려보겠다고
+getReferenceById()라는 메소드를 사용해봤다. (해당 메소드 실행시 그 시점에서는 프록시객체의 값을 참조만 하고 .getName()같은
+메소드가 실행 될 때 select 쿼리가 실행되고 프록시는 초기화 됨)<br>
+그런데 코드를 계속 봤더니 컨트롤러단에서 이미 삭제하고자 하는 객체를 찾아두고 있어서 파라미터로 넘길때 그 객체 자체를 넘겨주면
+해결이 되는 문제였던 것이다❗❗ 항상 코드 뭐 그거 더 들여다본다고 바뀌나..?뭐가 다시 보이나..? 싶었는데 처음으로 
+뭔가를 본 경험을 해서 즐거웠다.
