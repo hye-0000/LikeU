@@ -47,7 +47,7 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData delete(Integer id){
+    public RsData delete(Long id){
         LikeablePerson likeablePerson = likeablePersonRepository.getReferenceById(id);
         String toInstaMemberUsername = likeablePerson.getToInstaMember().getUsername();
         likeablePersonRepository.delete(likeablePerson);
@@ -59,7 +59,7 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
-    public Optional<LikeablePerson> findById(Integer id){
+    public Optional<LikeablePerson> findById(Long id){
         return likeablePersonRepository.findById(id);
     }
 }
