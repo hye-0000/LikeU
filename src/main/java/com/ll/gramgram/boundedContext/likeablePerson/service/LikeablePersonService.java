@@ -48,8 +48,7 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData delete(Long id){
-        LikeablePerson likeablePerson = likeablePersonRepository.getReferenceById(id);
+    public RsData delete(LikeablePerson likeablePerson){
         String toInstaMemberUsername = likeablePerson.getToInstaMember().getUsername();
         likeablePersonRepository.delete(likeablePerson);
 

@@ -73,7 +73,7 @@ public class LikeablePersonController {
 
         if (deletePermissionRsData.isFail()) return rq.historyBack(deletePermissionRsData);
 
-        RsData deleteRs = likeablePersonService.delete(id);
+        RsData deleteRs = likeablePersonService.delete(likeablePerson);
 
         return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
     }
