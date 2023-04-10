@@ -43,6 +43,9 @@ public class LikeablePersonService {
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
 
+        if(member.getInstaMember().getUsername().equals(username) && attractiveTypeCode==likeablePerson.getAttractiveTypeCode()){
+            return RsData.of("F-1", "이미 등록된 상대를 다시 등록할 수 없습니다.");
+        }
         likeablePersonRepository.save(likeablePerson); // 저장
 
         // 너가 좋아하는 호감표시 생겼어.
@@ -77,5 +80,12 @@ public class LikeablePersonService {
 
     public Optional<LikeablePerson> findById(Long id){
         return likeablePersonRepository.findById(id);
+    }
+
+    public RsData countLike(List<LikeablePerson> fromLikeablePeople) {
+        if(fromLikeablePeople.size() > 10)
+            return RsData.of("F-2", "더 이상 등록할 수 없습니다.");
+
+        return RsData.of("S-1", "추가 가능합니다.");
     }
 }

@@ -40,7 +40,12 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
+        Member user = rq.getMember();
+        RsData<LikeablePerson> createRsData = likeablePersonService.like(user, addForm.getUsername(), addForm.getAttractiveTypeCode());
+
+        RsData countLikeRsData = likeablePersonService.countLike(user.getInstaMember().getFromLikeablePeople());
+
+        if (countLikeRsData.isFail()) return rq.historyBack(countLikeRsData);
 
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
@@ -53,6 +58,7 @@ public class LikeablePersonController {
     @GetMapping("/list")
     public String showList(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
+        System.out.println(instaMember.getFromLikeablePeople().size());
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
