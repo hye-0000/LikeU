@@ -47,10 +47,6 @@ public class LikeablePersonController {
 
         RsData<LikeablePerson> createRsData = likeablePersonService.like(member, addForm.getUsername(), addForm.getAttractiveTypeCode());
 
-//        System.out.println("현재 로그인한 멤버의 인스타멤버 id(from_insta_member_id): " + member.getInstaMember().getId());
-//        System.out.println("뭐가나올까" + member);
-//        System.out.println("저장된 객체가 있나 일단 확인 갈기기x 좋아요 받은 사람의 id" + likeablePersonService.findByToInstaMemberUsername(addForm.getUsername()).orElse(null).getToInstaMember().getId());
-
         RsData countLikeRsData = likeablePersonService.countLike(member.getInstaMember().getFromLikeablePeople());    //호감 개수 확인
 
         if (countLikeRsData.isFail()) return rq.historyBack(countLikeRsData);

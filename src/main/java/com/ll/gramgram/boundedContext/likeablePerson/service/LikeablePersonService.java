@@ -38,17 +38,13 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
-
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
         Optional<LikeablePerson> findLikeablePerson = findByToInstaMemberUsername(username);
 
-        if(findByToInstaMemberUsername(username).isPresent() && findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() == attractiveTypeCode){
-            //System.out.println(findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() == attractiveTypeCode);
-            //System.out.println("저장된 객체가 있나 일단 확인 갈기기" + findByToInstaMemberUsername(username));
+        if(findLikeablePerson.isPresent() && findLikeablePerson.orElse(null).getAttractiveTypeCode() == attractiveTypeCode){
             return RsData.of("F-1", "이미 등록된 상대입니다.");
-        }else if(findByToInstaMemberUsername(username).isPresent() && findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() != attractiveTypeCode){
-            System.out.println(findByToInstaMemberUsername(username));
+        }else if(findLikeablePerson.isPresent() && findLikeablePerson.orElse(null).getAttractiveTypeCode() != attractiveTypeCode){
             LikeablePerson likeablePerson = findLikeablePerson.get();
             likeablePerson.updateAttractiveTypeCode(attractiveTypeCode);
             return RsData.of("S-2",  "입력하신 인스타유저(%s)의 매력이 수정되었습니다.".formatted(username));
