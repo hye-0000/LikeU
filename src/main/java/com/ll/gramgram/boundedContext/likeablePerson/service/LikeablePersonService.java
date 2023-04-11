@@ -21,6 +21,12 @@ public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
 
+    public RsData checkLikePermission (String username, int attractiveTypeCode){
+        if(findByToInstaMemberUsername(username).isPresent() && findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() == attractiveTypeCode){
+            return RsData.of("F-1", "이미 등록된 상대입니다.");
+        }
+        return RsData.of("S-1", "호감 상대로 등록 가능합니다.");
+    }
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
         if ( member.hasConnectedInstaMember() == false ) {
@@ -31,8 +37,20 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
+
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+
+
+        if(findByToInstaMemberUsername(username).isPresent() && findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() == attractiveTypeCode){
+            //System.out.println(findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() == attractiveTypeCode);
+            //System.out.println("저장된 객체가 있나 일단 확인 갈기기" + findByToInstaMemberUsername(username));
+            return RsData.of("F-1", "이미 등록된 상대입니다.");
+        }else if(findByToInstaMemberUsername(username).isPresent() && findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() != attractiveTypeCode){
+            System.out.println(findByToInstaMemberUsername(username));
+            LikeablePerson wantChange = findByToInstaMemberUsername(username).orElse(null);
+            return RsData.of("F-1", "이미 등록된 상대지만 현재 매력이 다릅니다.");
+        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
@@ -43,9 +61,8 @@ public class LikeablePersonService {
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
 
-        if(member.getInstaMember().getUsername().equals(username) && attractiveTypeCode==likeablePerson.getAttractiveTypeCode()){
-            return RsData.of("F-1", "이미 등록된 상대를 다시 등록할 수 없습니다.");
-        }
+        System.out.println(likeablePerson.getAttractiveTypeCode());
+
         likeablePersonRepository.save(likeablePerson); // 저장
 
         // 너가 좋아하는 호감표시 생겼어.
@@ -82,10 +99,17 @@ public class LikeablePersonService {
         return likeablePersonRepository.findById(id);
     }
 
+    public Optional<LikeablePerson> findByToInstaMemberUsername(String name){
+        return likeablePersonRepository.findByToInstaMemberUsername(name);
+    }
+
     public RsData countLike(List<LikeablePerson> fromLikeablePeople) {
         if(fromLikeablePeople.size() > 10)
             return RsData.of("F-2", "더 이상 등록할 수 없습니다.");
 
         return RsData.of("S-1", "추가 가능합니다.");
     }
+
+
+
 }
