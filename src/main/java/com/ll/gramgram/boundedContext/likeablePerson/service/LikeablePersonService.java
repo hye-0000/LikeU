@@ -22,13 +22,6 @@ public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
 
-    public RsData checkLikePermission (String username, int attractiveTypeCode){
-        if(findByToInstaMemberUsername(username).isPresent() && findByToInstaMemberUsername(username).orElse(null).getAttractiveTypeCode() == attractiveTypeCode){
-            return RsData.of("F-1", "이미 등록된 상대입니다.");
-        }
-        return RsData.of("S-1", "호감 상대로 등록 가능합니다.");
-    }
-
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
         InstaMember fromInstaMember = member.getInstaMember();
@@ -96,10 +89,6 @@ public class LikeablePersonService {
             return RsData.of("F-2", "권한이 없습니다.");
 
         return RsData.of("S-1", "삭제가능합니다.");
-    }
-
-    public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
-        return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
     public Optional<LikeablePerson> findById(Long id){
