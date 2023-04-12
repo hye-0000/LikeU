@@ -31,6 +31,8 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
+        InstaMember fromInstaMember = member.getInstaMember();
+
         if ( member.hasConnectedInstaMember() == false ) {
             return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
@@ -39,14 +41,19 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
-        InstaMember fromInstaMember = member.getInstaMember();
-        InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
-        Optional<LikeablePerson> findLikeablePerson = findByToInstaMemberUsername(username);
 
-        if(findLikeablePerson.isPresent() && findLikeablePerson.orElse(null).getAttractiveTypeCode() == attractiveTypeCode){
-            return RsData.of("F-1", "이미 등록된 상대입니다.");
-        }else if(findLikeablePerson.isPresent() && findLikeablePerson.orElse(null).getAttractiveTypeCode() != attractiveTypeCode){
-            LikeablePerson likeablePerson = findLikeablePerson.get();
+        InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+        System.out.println("toInstaMember 인스타멤버: " + toInstaMember);
+        Optional<LikeablePerson> findLikeablePerson = findByToInstaMemberUsername(username);
+        System.out.println(findLikeablePerson);
+
+        List<LikeablePerson> fromLikeablePerson = fromInstaMember.getFromLikeablePeople();
+        Optional<LikeablePerson> findLikeablePersonToChange = findLikeablePerson(toInstaMember, fromLikeablePerson);
+
+        if(findLikeablePersonToChange.isPresent()){
+            LikeablePerson likeablePerson = findLikeablePersonToChange.get();
+            if (likeablePerson.getAttractiveTypeCode() == attractiveTypeCode)
+                return RsData.of("F-1", "이미 등록된 상대입니다.");
             likeablePerson.updateAttractiveTypeCode(attractiveTypeCode);
             return RsData.of("S-2",  "입력하신 인스타유저(%s)의 매력이 수정되었습니다.".formatted(username));
         }
@@ -71,6 +78,10 @@ public class LikeablePersonService {
         toInstaMember.addToLikeablePerson(likeablePerson);
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+    }
+
+    public Optional<LikeablePerson> findLikeablePerson(InstaMember findInstaMember, List<LikeablePerson> likeablePeople){
+        return likeablePeople.stream().filter(i -> findInstaMember.getId().equals(i.getToInstaMember().getId())).findFirst();
     }
 
     @Transactional
@@ -104,7 +115,7 @@ public class LikeablePersonService {
 
     public RsData countLike(List<LikeablePerson> fromLikeablePeople) {
         long likeablePersonFromMaxSize = AppConfig.getLikeablePersonFromMaxSize();
-        if(fromLikeablePeople.size() > likeablePersonFromMaxSize)
+        if(fromLikeablePeople.size() >= likeablePersonFromMaxSize)
             return RsData.of("F-2", "더 이상 등록할 수 없습니다.");
 
         return RsData.of("S-1", "추가 가능합니다.");
