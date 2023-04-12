@@ -42,10 +42,6 @@ public class LikeablePersonController {
     public String add(@Valid AddForm addForm) {
         Member member = rq.getMember();
 
-        RsData countLikeRsData = likeablePersonService.countLike(member.getInstaMember().getFromLikeablePeople());    //호감 개수 확인
-
-        if (countLikeRsData.isFail()) return rq.historyBack(countLikeRsData);
-
         RsData<LikeablePerson> createRsData = likeablePersonService.like(member, addForm.getUsername(), addForm.getAttractiveTypeCode());
 
         if (createRsData.isFail()) {
