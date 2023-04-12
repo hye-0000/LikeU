@@ -66,8 +66,6 @@ public class LikeablePersonService {
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
 
-        System.out.println(likeablePerson.getAttractiveTypeCode());
-
         likeablePersonRepository.save(likeablePerson); // 저장
 
         // 너가 좋아하는 호감표시 생겼어.
