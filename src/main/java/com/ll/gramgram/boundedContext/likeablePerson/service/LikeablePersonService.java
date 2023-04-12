@@ -95,10 +95,6 @@ public class LikeablePersonService {
         return likeablePersonRepository.findById(id);
     }
 
-    public Optional<LikeablePerson> findByToInstaMemberUsername(String name){
-        return likeablePersonRepository.findByToInstaMemberUsername(name);
-    }
-
     public boolean countLike(List<LikeablePerson> fromLikeablePeople) {
         long likeablePersonFromMaxSize = AppConfig.getLikeablePersonFromMaxSize();
         return fromLikeablePeople.size() >= likeablePersonFromMaxSize;
