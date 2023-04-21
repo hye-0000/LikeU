@@ -19,7 +19,7 @@
         <script th:inline="javascript">
             const myInstaMemberUsername = /*[[ ${@rq.member.instaMember.username} ]]*/ null;
 
-            function AddForm__submit(form) {
+            function LikeForm__submit(form) {
                 // username 이(가) 올바른지 체크
 
                 form.username.value = form.username.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
@@ -55,7 +55,7 @@
         </script>
 
         <form th:action method="POST" class="p-10 max-w-sm flex flex-col gap-4"
-              onsubmit="AddForm__submit(this); return false;">
+              onsubmit="LikeForm__submit(this); return false;">
             <div>
                 당신의 인스타ID : <span class="badge" th:text="${@rq.member.instaMember.username}"></span>
             </div>
