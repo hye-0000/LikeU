@@ -67,16 +67,16 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id){
+    public String cancel(@PathVariable("id") Long id){
         Member user = rq.getMember();  //현재 로그인 된 멤버
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null); //넘어온  id로 삭제할 객체
 
-        RsData deletePermissionRsData = likeablePersonService.checkDeletePermission(user, likeablePerson);
+        RsData cancelPermissionRsData = likeablePersonService.checkCancelPermission(user, likeablePerson);
 
-        if (deletePermissionRsData.isFail()) return rq.historyBack(deletePermissionRsData);
+        if (cancelPermissionRsData.isFail()) return rq.historyBack(cancelPermissionRsData);
 
-        RsData deleteRs = likeablePersonService.delete(likeablePerson);
+        RsData cancleRs = likeablePersonService.cancel(likeablePerson);
 
-        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
+        return rq.redirectWithMsg("/likeablePerson/list", cancleRs);
     }
 }
