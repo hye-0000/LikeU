@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/likeablePerson")
@@ -67,7 +66,7 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public String cancel(@PathVariable("id") Long id){
+    public String cancel(@PathVariable("id") Long id) {
         Member user = rq.getMember();  //현재 로그인 된 멤버
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null); //넘어온  id로 삭제할 객체
 
