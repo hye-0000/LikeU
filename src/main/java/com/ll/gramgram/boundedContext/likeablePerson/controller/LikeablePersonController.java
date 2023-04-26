@@ -24,24 +24,24 @@ public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
 
-    @GetMapping("/like")
-    public String showLike() {
-        return "usr/likeablePerson/like";
+    @GetMapping("/add")
+    public String showAdd() {
+        return "usr/likeablePerson/add";
     }
 
     @AllArgsConstructor
     @Getter
-    public static class LikeForm {
+    public static class AddForm {
         private final String username;
         private final int attractiveTypeCode;
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/like")
-    public String like(@Valid LikeForm likeForm) {
+    @PostMapping("/add")
+    public String add(@Valid AddForm addForm) {
         Member member = rq.getMember();
 
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(member, likeForm.getUsername(), likeForm.getAttractiveTypeCode());
+        RsData<LikeablePerson> createRsData = likeablePersonService.like(member, addForm.getUsername(), addForm.getAttractiveTypeCode());
 
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
