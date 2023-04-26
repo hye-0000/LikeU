@@ -160,7 +160,7 @@ public class LikeablePersonControllerTests {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
-                        delete("/likeablePerson/cancel/1")
+                        delete("/likeablePerson/delete/1")
                                 .with(csrf())
                 )
                 .andDo(print());
@@ -169,7 +169,7 @@ public class LikeablePersonControllerTests {
 
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("cancel"))
+                .andExpect(handler().methodName("delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/likeablePerson/list**"))
         ;
@@ -191,7 +191,7 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("cancel"))
+                .andExpect(handler().methodName("delete"))
                 .andExpect(status().is4xxClientError())
         ;
     }
@@ -211,7 +211,7 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("cancel"))
+                .andExpect(handler().methodName("delete"))
                 .andExpect(status().is4xxClientError())
         ;
 

@@ -81,14 +81,15 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData cancel(LikeablePerson likeablePerson) {
+    public RsData delete(LikeablePerson likeablePerson){
         String toInstaMemberUsername = likeablePerson.getToInstaMember().getUsername();
         likeablePersonRepository.delete(likeablePerson);
 
         return RsData.of("S-1", "%s님에 대한 호감을 취소하셨습니다.".formatted(toInstaMemberUsername));
     }
 
-    public RsData checkCancelPermission(Member user, LikeablePerson likeablePerson) {
+
+    public RsData checkDeletePermission(Member user, LikeablePerson likeablePerson){
         if (likeablePerson == null) return RsData.of("F-1", "이미 삭제되었습니다.");
 
         if (!Objects.equals(user.getInstaMember().getId(), likeablePerson.getFromInstaMember().getId()))
