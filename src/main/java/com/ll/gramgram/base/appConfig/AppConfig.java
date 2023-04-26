@@ -10,7 +10,7 @@ public class AppConfig {
     private static long likeablePersonFromMaxSize;
 
     @Value("${custom.likeablePerson.from.maxSize}")
-    public void setLikeablePersonFromMaxSize(long likeablePersonFromMaxSize){
+    public void setLikeablePersonFromMaxSize(long likeablePersonFromMaxSize) {
         AppConfig.likeablePersonFromMaxSize = likeablePersonFromMaxSize;
     }
 }

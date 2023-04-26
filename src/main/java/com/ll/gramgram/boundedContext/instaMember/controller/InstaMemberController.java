@@ -46,10 +46,10 @@ public class InstaMemberController {
     public String connect(@Valid ConnectForm connectForm) {
         RsData<InstaMember> rsData = instaMemberService.connect(rq.getMember(), connectForm.getUsername(), connectForm.getGender());
 
-        if ( rsData.isFail() ) {
+        if (rsData.isFail()) {
             return rq.historyBack(rsData);
         }
 
-        return rq.redirectWithMsg("/likeablePerson/add", "인스타그램 계정이 연결되었습니다.");
+        return rq.redirectWithMsg("/likeablePerson/like", "인스타그램 계정이 연결되었습니다.");
     }
 }
