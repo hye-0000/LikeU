@@ -33,6 +33,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'com.h2database:h2'
+
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // 타임리프에서 layout.html 사용하려고
 }
 
