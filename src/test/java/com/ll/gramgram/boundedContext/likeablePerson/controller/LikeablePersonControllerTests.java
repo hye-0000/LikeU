@@ -77,7 +77,7 @@ public class LikeablePersonControllerTests {
                         <input type="radio" name="attractiveTypeCode" value="3"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <input type="submit" value="추가"
+                        id="btn-like-1"
                         """.stripIndent().trim())));
         ;
     }
