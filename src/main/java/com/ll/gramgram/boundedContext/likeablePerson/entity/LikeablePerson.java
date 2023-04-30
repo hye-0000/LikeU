@@ -50,4 +50,12 @@ public class LikeablePerson {
     public void updateAttractiveTypeCode(int code) {
         this.attractiveTypeCode = code;
     }
+
+    public String getAttractiveTypeDisplayNameWithIcon() {
+        return switch (attractiveTypeCode) {
+            case 1 -> "<i class=\"fa-solid fa-person-rays\"></i>";
+            case 2 -> "<i class=\"fa-regular fa-face-smile\"></i>";
+            default -> "<i class=\"fa-solid fa-people-roof\"></i>";
+        } + "&nbsp;" + getAttractiveTypeDisplayName();
+    }
 }
