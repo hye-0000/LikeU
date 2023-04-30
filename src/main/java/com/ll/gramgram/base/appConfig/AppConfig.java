@@ -11,7 +11,7 @@ public class AppConfig {
     @Getter
     private static long likeablePersonFromMax;
 
-    @Value("${custom.likeablePerson.from.max}")
+    @Value("${custom.likeablePerson.from.maxSize}")
     public void setLikeablePersonFromMax(long likeablePersonFromMax) {
         AppConfig.likeablePersonFromMax = likeablePersonFromMax;
     }
