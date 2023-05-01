@@ -1,9 +1,14 @@
 package com.ll.gramgram.base.security;
 
+import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -12,6 +17,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,14 +28,28 @@ import java.util.Map;
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
+    private final Rq rq;
 
     // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+
+        if (providerTypeCode.equals("INSTAGRAM")) {
+            String userInfoUri = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri();
+            userInfoUri = userInfoUri.replace("{access-token}", userRequest.getAccessToken().getTokenValue());
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
+            ResponseEntity<Map> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, entity, Map.class);
+            Map<String, Object> userAttributes = response.getBody();
+
+            Member member = rq.getMember();
+            return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
+        }
+
+        OAuth2User oAuth2User = super.loadUser(userRequest);
 
         String oauthId = switch (providerTypeCode) {
             case "NAVER" -> ((Map<String, String>) oAuth2User.getAttributes().get("response")).get("id");
