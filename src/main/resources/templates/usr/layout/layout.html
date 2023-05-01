@@ -1,75 +1,82 @@
-<html>
-
-<head>
-
-    <meta charSet="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <!-- 제이쿼리 불러오기 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-
-    <!-- toastr 불러오기 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-    <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
-
-    <!-- 공통 JS 불러오기 -->
-    <script src="/resource/common/common.js"></script>
-    <!-- 공통 CSS 불러오기 -->
-    <link rel="stylesheet" href="/resource/common/common.css">
-
-</head>
+<html layout:decorate="~{common/layout.html}">
 
 <body>
 
-<!-- 데이지 UI 불러오기 -->
-<link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
-<!-- 테일윈드 불러오기 -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- 공통 상단 -->
-<header>
-    <a href="/" className="btn btn-link">메인</a>
-    <a href="/member/login" th:if="${@rq.logout}" className="btn btn-link">로그인</a>
-    <a href="/member/join" th:if="${@rq.logout}" className="btn btn-link">회원가입</a>
-    <a href="/member/me" th:if="${@rq.login}" className="btn btn-link">내 정보</a>
-    <a href="/instaMember/connect" th:if="${@rq.login}" className="btn btn-link">본인의 인스타그램 정보 입력</a>
-    <a href="/likeablePerson/add" th:if="${@rq.login}" className="btn btn-link">호감표시</a>
-    <a href="/likeablePerson/list" th:if="${@rq.login}" className="btn btn-link">호감목록</a>
-    <a href="javascript:;" th:if="${@rq.login}" onClick="$(this).next().submit();" className="btn btn-link">로그아웃</a>
-    <form th:if="${@rq.login}" hidden th:action="|/member/logout|" method="POST"></form>
-    <span th:if="${@rq.login}" th:text="|${@rq.member.username}님 환영합니다.|"></span>
-    <span th:if="${@rq.login and @rq.member.hasConnectedInstaMember()}"
-          th:text="|(${#lists.size(@rq.member.instaMember.toLikeablePeople)}/${#lists.size(@rq.member.instaMember.fromLikeablePeople)})|"></span>
+<header layout:fragment="header" class="sticky top-0 z-50">
+    <div class="navbar max-w-2xl mx-auto bg-base-100">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <label tabindex="0" class="btn btn-ghost btn-circle">
+                    <i class="fa-solid fa-bars"></i>
+                </label>
+                <ul tabindex="0"
+                    class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                    <li th:if="${@rq.logout}"><a href="/usr/member/login"><i
+                            class="fa-solid fa-arrow-right-to-bracket"></i> 시작하기</a>
+                    </li>
+                    <li th:if="${@rq.admin}"><a href="/adm/home/main"><i class="fa-solid fa-gauge"></i> 관리자 페이지</a>
+                    </li>
+                    <li th:if="${@rq.login}"><a href="/usr/member/pop"><i class="fa-solid fa-chart-line"></i> 내 인기</a>
+                    </li>
+                    <li th:if="${@rq.login}">
+                        <a href="/usr/likeablePerson/toList">
+                            <i class="fa-solid fa-list-ul"></i> 내가 받은 호감
+                        </a>
+                    </li>
+                    <li th:if="${@rq.login}"><a href="/usr/member/me"><i class="fa-solid fa-user"></i> 내 정보</a></li>
+                    <div th:if="${@rq.login}" class="divider"></div>
+                    <li th:if="${@rq.login}"><a href="/usr/likeablePerson/like"><i
+                            class="fa-solid fa-heart-circle-plus"></i> 호감표시</a></li>
+                    <li th:if="${@rq.login}"><a href="/usr/likeablePerson/list"><i class="fa-solid fa-list-ol"></i>
+                        호감목록</a>
+                    </li>
+                    <li th:if="${@rq.login}" th:unless="${@rq.member.hasConnectedInstaMember}">
+                        <a href="/usr/instaMember/connectByApi">
+                            <i class="fa-brands fa-instagram"></i>
+                            인스타 아이디 연결
+                        </a>
+                    </li>
+                    <div th:if="${@rq.login}" class="divider"></div>
+                    <li><a href="/usr/home/about"><i class="fa-solid fa-circle-info"></i> 그램그램이란?</a>
+                    </li>
+                    <li th:if="${@rq.login}">
+                        <a href="javascript:" onclick="$(this).next().submit();">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+                        </a>
+                        <form class="!hidden" hidden th:action="|/usr/member/logout|" method="POST"></form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="navbar-center">
+            <a href="/" class="btn btn-ghost normal-case text-xl">
+                <span class="hidden min-[341px]:inline">
+                    gram
+                    <i class="fa-solid fa-heart text-red-300"></i>
+                    gram
+                </span>
+                <span class="min-[341px]:hidden">gg</span>
+                &nbsp;
+            </a>
+        </div>
+        <div class="navbar-end">
+            <a href="/usr/member/pop" class="btn btn-ghost gap-1" th:if="${@rq.login}">
+                <i class="fa-solid fa-chart-line"></i>
+            </a>
+            <a href="/usr/notification/list" class="btn btn-ghost btn-circle" th:if="${@rq.login}">
+                <div class="indicator">
+                    <i class="fa-regular fa-bell"></i>
+                    <span th:if="${@rq.login}" class="badge badge-xs badge-primary indicator-item"></span>
+                </div>
+            </a>
+            <a href="/usr/home/about" class="btn btn-ghost btn-circle" th:if="${@rq.logout}">
+                <div class="indicator">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+            </a>
+        </div>
+    </div>
 </header>
 
-<main layout:fragment="main"></main>
-
-<script th:inline="javascript">
-    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-    const params = /*[[ ${param} ]]*/ null;
-
-    if (params.msg) {
-        toastNotice(params.msg[0]);
-    }
-
-    if (params.errorMsg) {
-        toastWarning(params.errorMsg[0]);
-    }
-
-    // history.back 에 의해서 돌아온 경우에 실행됨
-    // 평소에도 실행됨
-    $(window).bind("pageshow", function (event) {
-        const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
-
-        if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
-            toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
-            localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
-        }
-    });
-</script>
-
 </body>
-
 </html>
