@@ -52,4 +52,26 @@ public class InstaMemberController {
 
         return rq.redirectWithMsg("/usr/likeablePerson/like", "인스타그램 계정이 연결되었습니다.");
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/connectByApi")
+    public String showConnectByApi() {
+        return "usr/instaMember/connectByApi";
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ConnectByApiForm {
+        @NotBlank
+        @Size(min = 1, max = 1)
+        private final String gender;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/connectByApi")
+    public String connectByApi(@Valid ConnectByApiForm connectForm) {
+        rq.setSessionAttr("connectByApi__gender", connectForm.getGender());
+
+        return "redirect:/oauth2/authorization/instagram";
+    }
 }

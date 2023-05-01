@@ -11,20 +11,6 @@
         function ConnectForm__submit(form) {
             // username 이(가) 올바른지 체크
 
-            form.username.value = form.username.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
-
-            if (form.username.value.length === 0) {
-                toastWarning('인스타그램 아이디를 입력해주세요.');
-                form.username.focus();
-                return;
-            }
-
-            if (form.username.value.length < 3) {
-                toastWarning('인스타그램 아이디를 3자 이상 입력해주세요.');
-                form.username.focus();
-                return;
-            }
-
             const $checkedGenderRadioButton = $(form).find("[name=gender]:checked");
 
             if ($checkedGenderRadioButton.length === 0) {
@@ -40,34 +26,10 @@
     <div class="max-w-2xl w-full px-4">
         <h1 class="mb-4">
             <i class="fa-brands fa-instagram"></i>
-            인스타아이디 입력
+            인스타 아이디 연결
         </h1>
 
         <form class="flex flex-col gap-6" method="POST" th:action onsubmit="ConnectForm__submit(this); return false;">
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">
-                        <i class="fa-brands fa-instagram"></i>
-                        인스타 아이디
-                    </span>
-                </label>
-                <input type="text" name="username" placeholder="인스타 아이디" class="input input-bordered" autofocus
-                       onchange="$(this).keyup();"
-                       onkeyup="$(this).next().children(':last-child').text(this.value.trim());"
-                       onpaste="setTimeoutZero(() => $(this).keyup());"/>
-                <a href="#" onclick="$(this).attr('href', $(this).text().replaceAll(' ', ''));" target="_blank"
-                   class="block mt-3 text-sm break-all underline text-blue-400">
-                    <span>https://instagram.com/</span><span class="text-red-300"></span>
-                </a>
-                <script>
-                    // input : 태그가 input 인 녀석 선택
-                    // input[name="username"] 태그가 input 이고 name 속성의 값이 username 인 녀석을 선택
-                    // input[name="username"]:last : 태그가 input 이고 name 속성의 값이 username 인 녀석들 중에서 꼴등 한명 선택
-                    // .keyup(); : 강제로 keyup 이벤트 트리거(이벤트를 강제로 발동시킨다.)
-                    $(`input[name="username"]:last`).keyup();
-                </script>
-            </div>
-
             <div class="form-control">
                 <label class="label">
                     <span class="label-text">
@@ -97,10 +59,13 @@
 
             </div>
 
-            <button id="btn-insta-member-connect-1" class="btn btn-block btn-primary gap-1">
-                <i class="fa-brands fa-instagram"></i>
-                <span>인스타 아이디 입력</span>
+
+            <button id="btn-insta-member-connect-1"
+                    class="btn btn-block btn-outline gap-1">
+                <i class="fa-brands fa-instagram text-[color:#E1306C]"></i>
+                <span>인스타 아이디 연결</span>
             </button>
+
         </form>
     </div>
 </main>

@@ -1,6 +1,7 @@
 package com.ll.gramgram.base.security;
 
 import com.ll.gramgram.base.rq.Rq;
+import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
     private final Rq rq;
+    private final InstaMemberService instaMemberService;
 
     // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
@@ -38,13 +40,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         if (providerTypeCode.equals("INSTAGRAM")) {
+            if (rq.isLogout()) {
+                throw new OAuth2AuthenticationException("로그인 후 이용해주세요.");
+            }
+
             String userInfoUri = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri();
             userInfoUri = userInfoUri.replace("{access-token}", userRequest.getAccessToken().getTokenValue());
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
             ResponseEntity<Map> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, entity, Map.class);
-            Map<String, Object> userAttributes = response.getBody();
+            Map<String, String> userAttributes = response.getBody();
 
+            String gender = rq.getSessionAttr("connectByApi__gender", "W");
+            rq.removeSessionAttr("connectByApi__gender");
+
+            instaMemberService.connect(rq.getMember(), gender, userAttributes.get("id"), userAttributes.get("username"), userRequest.getAccessToken().getTokenValue());
             Member member = rq.getMember();
             return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
         }
