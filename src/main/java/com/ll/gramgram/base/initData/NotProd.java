@@ -52,15 +52,21 @@ public class NotProd {
                 Member memberUser8ByNaver = memberService.whenSocialLogin("NAVER", "NAVER__%s".formatted(naverDevUserOAuthId)).getData();
                 Member memberUser9ByFacebook = memberService.whenSocialLogin("FACEBOOK", "FACEBOOK__%s".formatted(facebookDevUserOAuthId)).getData();
 
-                instaMemberService.connect(memberUser2, "insta_user2", "M");
+                instaMemberService.connect(memberUser2, "insta_user2", "W");
                 instaMemberService.connect(memberUser3, "insta_user3", "W");
                 instaMemberService.connect(memberUser4, "insta_user4", "M");
-                instaMemberService.connect(memberUser5, "insta_user5", "W");
+                instaMemberService.connect(memberUser5, "insta_user5", "M");
 
                 // 원활한 테스트와 개발을 위해서 자동으로 만들어지는 호감이 삭제, 수정이 가능하도록 쿨타임해제
                 LikeablePerson likeablePersonToInstaUser4 = likeablePersonService.like(memberUser3, "insta_user4", 1).getData();
                 Ut.reflection.setFieldValue(likeablePersonToInstaUser4, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
                 LikeablePerson likeablePersonToInstaUser100 = likeablePersonService.like(memberUser3, "insta_user100", 2).getData();
+                Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
+                LikeablePerson likeablePersonToInstaUserhye = likeablePersonService.like(memberUser2, "hye_0000_", 2).getData();
+                Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
+                LikeablePerson likeablePersonToInstaUserhye_ = likeablePersonService.like(memberUser4, "hye_0000_", 2).getData();
+                Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
+                LikeablePerson likeablePersonToInstaUserhye_0 = likeablePersonService.like(memberUser5, "hye_0000_", 2).getData();
                 Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
 
                 LikeablePerson likeablePersonToInstaUserAbcd = likeablePersonService.like(memberUser3, "insta_user_abcd", 2).getData();
