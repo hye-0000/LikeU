@@ -12,11 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-
-import static java.lang.String.valueOf;
 
 @Entity
 @Getter
