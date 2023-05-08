@@ -6,7 +6,9 @@ import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc // http 요청, 응답 테스트
 @Transactional // 실제로 테스트에서 발생한 DB 작업이 영구적으로 적용되지 않도록, test + 트랜잭션 => 자동롤백
 @ActiveProfiles("test") // application-test.yml 을 활성화 시킨다.
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class InstaMemberControllerTests {
     @Autowired
     private MockMvc mvc;
@@ -42,7 +45,7 @@ public class InstaMemberControllerTests {
     void t001() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
-                .perform(get("/instaMember/connect"))
+                .perform(get("/usr/instaMember/connect"))
                 .andDo(print());
 
         // THEN
@@ -69,7 +72,7 @@ public class InstaMemberControllerTests {
     void t002() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
-                .perform(get("/instaMember/connect"))
+                .perform(get("/usr/instaMember/connect"))
                 .andDo(print());
 
         // THEN
@@ -77,7 +80,7 @@ public class InstaMemberControllerTests {
                 .andExpect(handler().handlerType(InstaMemberController.class))
                 .andExpect(handler().methodName("showConnect"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("**/member/login**"));
+                .andExpect(redirectedUrlPattern("**/usr/member/login**"));
     }
 
     @Test
@@ -86,7 +89,7 @@ public class InstaMemberControllerTests {
     void t003() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
-                .perform(post("/instaMember/connect")
+                .perform(post("/usr/instaMember/connect")
                         .with(csrf()) // CSRF 키 생성
                         .param("username", "abc123")
                         .param("gender", "W")
@@ -98,7 +101,7 @@ public class InstaMemberControllerTests {
                 .andExpect(handler().handlerType(InstaMemberController.class))
                 .andExpect(handler().methodName("connect"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/likeablePerson/like**"));
+                .andExpect(redirectedUrlPattern("/usr/likeablePerson/like**"));
 
         InstaMember instaMember = instaMemberService.findByUsername("abc123").orElse(null);
 
@@ -113,7 +116,7 @@ public class InstaMemberControllerTests {
     void t004() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
-                .perform(post("/instaMember/connect")
+                .perform(post("/usr/instaMember/connect")
                         .with(csrf()) // CSRF 키 생성
                         .param("username", "insta_user100")
                         .param("gender", "M")
@@ -125,7 +128,7 @@ public class InstaMemberControllerTests {
                 .andExpect(handler().handlerType(InstaMemberController.class))
                 .andExpect(handler().methodName("connect"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/likeablePerson/like**"));
+                .andExpect(redirectedUrlPattern("/usr/likeablePerson/like**"));
 
         InstaMember instaMember = instaMemberService.findByUsername("insta_user100").orElse(null);
 

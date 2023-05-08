@@ -29,14 +29,13 @@ import java.util.Map;
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
-    private final Rq rq;
     private final InstaMemberService instaMemberService;
+    private final Rq rq;
 
     // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
         if (providerTypeCode.equals("INSTAGRAM")) {
@@ -49,12 +48,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
             ResponseEntity<Map> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, entity, Map.class);
+
             Map<String, String> userAttributes = response.getBody();
 
             String gender = rq.getSessionAttr("connectByApi__gender", "W");
             rq.removeSessionAttr("connectByApi__gender");
 
             instaMemberService.connect(rq.getMember(), gender, userAttributes.get("id"), userAttributes.get("username"), userRequest.getAccessToken().getTokenValue());
+
             Member member = rq.getMember();
             return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
         }
