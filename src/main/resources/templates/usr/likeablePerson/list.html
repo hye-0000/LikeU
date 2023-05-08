@@ -86,10 +86,18 @@
                             </div>
                             <div th:unless="${likeablePerson.modifyUnlocked}"
                                  class="text-center text-gray-500 text-sm mt-2">
+<<<<<<< HEAD
                                 <span class="text-red-400">호감사유 변경</span>과 <span
                                     class="text-red-400">호감취소</span>는 <span
                                     class="badge badge-primary"
                                     th:text="${likeablePerson.modifyUnlockDateRemainStrHuman}"></span>에 가능합니다.
+=======
+                                <span class="text-red-400">호감사유 변경</span>과
+                                <span class="text-red-400">호감취소</span>는
+                                <span class="badge badge-primary" id="modify-unlock-time"
+                                      th:text="${likeablePerson.modifyUnlockDateRemainStrHuman}"></span>
+                                후에 가능합니다.
+>>>>>>> 9007f009e138fb7a24b09813d5001a62aae93d66
                             </div>
                         </div>
                     </div>
@@ -115,5 +123,29 @@
 </main>
 </body>
 
+<<<<<<< HEAD
 </html>
 
+=======
+<script>
+    const modifyUnlockElement = document.getElementById('modify-unlock-time');
+    // AJAX 요청을 보내어 데이터를 받아옵니다.
+    function fetchModifyUnlockDateRemain() {
+        fetch('/usr/likeablePerson/list')
+            .then(response => response.json())
+            .then(data => {
+                // 받아온 데이터로 텍스트를 업데이트합니다.
+                modifyUnlockElement.innerText = data.modifyUnlockDateRemainStrHuman;
+            })
+            .catch(error => console.error(error));
+    }
+
+    // 페이지 로드시 초기화합니다.
+    fetchModifyUnlockDateRemain();
+
+    // 일정 시간마다 업데이트합니다.
+    setInterval(fetchModifyUnlockDateRemain, 60000);
+</script>
+
+</html>
+>>>>>>> 9007f009e138fb7a24b09813d5001a62aae93d66
