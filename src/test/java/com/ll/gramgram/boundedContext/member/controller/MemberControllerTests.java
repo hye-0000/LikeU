@@ -1,4 +1,5 @@
-import com.ll.gramgram.boundedContext.member.controller.MemberController;
+package com.ll.gramgram.boundedContext.member.controller;
+
 import com.ll.gramgram.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
