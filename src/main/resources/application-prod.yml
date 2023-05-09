@@ -20,4 +20,4 @@ logging:
     org.hibernate.orm.jdbc.extract: INFO
 custom:
   site:
-    baseUrl: https://www.wholike.hye0.com
+    baseUrl: https://www.hye0.run
