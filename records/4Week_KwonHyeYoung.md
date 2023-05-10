@@ -14,6 +14,12 @@
 - [x] [선택 미션] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현
   - [x] 넘어오는 attractiveTypeCode에 맞게 필터링
 - [ ] [선택 미션] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 정렬기능
+  - [x] 최신순
+  - [x] 날짜순
+  - [ ] 인기 많은 순
+  - [ ] 인기 적은 순
+  - [ ] 성별순
+  - [ ] 호감 사유 순
 
 ### 3주차 미션 요약
 
@@ -37,15 +43,20 @@
   딱히 같은 상황도 없었고 해결 방법도 없었다. `docker logs`, `nslookup` 등 다양한 명령어를 사용하며 상태를 확인했다.
   컨테이너도 잘 떠있고 이것저것 모두 다 실행이 되고 있는 상태어서 난감했다. nginx proxy manager를 살펴보니 proxy host의
 destination 주소에 띄어쓰기가 들어가 있었던 것이 오류의 원인이었다. 😥
-
+---
 ### [선택 미션] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현
 
 **[접근 방법]**
 
 - 위와 동일하게 listingToCondition() 메소드에 if 문을 추가하여 넘어오는 attractiveTypeCode로 필터링하여
 동작하도록 만들었다. 
-  - 현재 attractiveTypeCode를 String으로 받아오는데 int로 변경시 오류가 난다. 왜 그런지 찾아봐야겠다🤔
-  - Integer.parseInt 역시 오류가 난다! 왜그럴까나
+
+### [선택 미션] 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 정렬기능
+
+**[접근 방법]**
+
+- 최신순 : sorted 메소드를 사용해 LikeablePerson에서 createDate를 가져와 reversed 메소드를 사용해 최신순으로 정렬하게 구현했다
+- 날짜순 : 위와 같이 sorted 메소드를 사용해 createDate 순으로 정렬하게 구현했다.
 
 ### 알게된 점 🤔
 - `isEmpty()`
@@ -60,4 +71,5 @@ destination 주소에 띄어쓰기가 들어가 있었던 것이 오류의 원�
 
 ### 리팩토링 시
 
-- 생각보다 배포에 시간을 많이 썼다😥
+- 이번에도 생각보다 배포에 시간을 많이 썼다😥
+- 나머지 4가지 옵션도 구현하기
