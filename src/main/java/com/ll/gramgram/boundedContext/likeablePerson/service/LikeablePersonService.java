@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -247,6 +248,17 @@ public class LikeablePersonService {
             likeablePeople = likeablePeople.stream()
                     .filter(i -> i.getAttractiveTypeCode() == attractiveTypeCode)
                     .collect(Collectors.toList());
+        }
+
+        switch (sortCode){
+            case 1: likeablePeople = likeablePeople.stream()
+                    .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                    .collect(Collectors.toList());
+            break;
+            case 2: likeablePeople = likeablePeople.stream()
+                    .sorted(Comparator.comparing(LikeablePerson::getCreateDate))
+                    .collect(Collectors.toList());
+            break;
         }
 
         return likeablePeople;
