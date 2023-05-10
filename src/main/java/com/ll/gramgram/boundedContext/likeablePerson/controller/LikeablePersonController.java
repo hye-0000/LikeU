@@ -123,8 +123,8 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
     public String showToList(Model model, @RequestParam(defaultValue = "") String gender,
-                             @RequestParam(defaultValue = "") String attractiveTypeCode,
-                             @RequestParam(defaultValue = "1") String sortCode) {
+                             @RequestParam(defaultValue = "0") int attractiveTypeCode,
+                             @RequestParam(defaultValue = "1") int sortCode) {
 
         InstaMember instaMember = rq.getMember().getInstaMember();
 

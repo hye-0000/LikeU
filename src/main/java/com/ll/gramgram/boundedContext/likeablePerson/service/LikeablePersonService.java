@@ -231,7 +231,7 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
     }
 
-    public List<LikeablePerson> listingToCondition(InstaMember instaMember, String gender, String attractiveTypeCode, String sortCode) {
+    public List<LikeablePerson> listingToCondition(InstaMember instaMember, String gender, int attractiveTypeCode, int sortCode) {
         List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
 
 
@@ -243,9 +243,9 @@ public class LikeablePersonService {
         }
 
         //옵션으로 attractiveTypeCode가 넘어온 경우
-        if(!attractiveTypeCode.isBlank()) {
+        if(attractiveTypeCode != 0) {
             likeablePeople = likeablePeople.stream()
-                    .filter(i -> i.getAttractiveTypeCode() == Integer.parseInt(attractiveTypeCode))
+                    .filter(i -> i.getAttractiveTypeCode() == attractiveTypeCode)
                     .collect(Collectors.toList());
         }
 
