@@ -234,11 +234,18 @@ public class LikeablePersonService {
     public List<LikeablePerson> listingToCondition(InstaMember instaMember, String gender, String attractiveTypeCode, String sortCode) {
         List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
 
-        if(gender.isBlank() && attractiveTypeCode.isBlank()){
-            return likeablePeople;
-        }else{
+
+        //옵션으로 gender가 넘어온 경우
+        if(gender.equals("M") || gender.equals("W")){
             likeablePeople = likeablePeople.stream()
                     .filter(i -> i.getFromInstaMember().getGender().equals(gender))
+                    .collect(Collectors.toList());
+        }
+
+        //옵션으로 attractiveTypeCode가 넘어온 경우
+        if(!attractiveTypeCode.isBlank()) {
+            likeablePeople = likeablePeople.stream()
+                    .filter(i -> i.getAttractiveTypeCode() == Integer.parseInt(attractiveTypeCode))
                     .collect(Collectors.toList());
         }
 
