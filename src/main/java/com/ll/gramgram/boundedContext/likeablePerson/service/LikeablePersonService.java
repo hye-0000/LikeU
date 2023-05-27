@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -233,34 +234,46 @@ public class LikeablePersonService {
     }
 
     public List<LikeablePerson> listingToCondition(InstaMember instaMember, String gender, int attractiveTypeCode, int sortCode) {
-        List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+        Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream();
 
-
-        //옵션으로 gender가 넘어온 경우
-        if(gender.equals("M") || gender.equals("W")){
-            likeablePeople = likeablePeople.stream()
-                    .filter(i -> i.getFromInstaMember().getGender().equals(gender))
-                    .collect(Collectors.toList());
+        if (!gender.isEmpty()) {
+            likeablePeopleStream = likeablePeopleStream
+                    .filter(likeablePerson -> likeablePerson.getFromInstaMember().getGender().equals(gender));
         }
 
-        //옵션으로 attractiveTypeCode가 넘어온 경우
-        if(attractiveTypeCode != 0) {
-            likeablePeople = likeablePeople.stream()
-                    .filter(i -> i.getAttractiveTypeCode() == attractiveTypeCode)
-                    .collect(Collectors.toList());
+        if (attractiveTypeCode != 0) {
+            likeablePeopleStream = likeablePeopleStream
+                    .filter(likeablePerson -> likeablePerson.getAttractiveTypeCode() == attractiveTypeCode);
         }
 
-        switch (sortCode){
-            case 1: likeablePeople = likeablePeople.stream()
-                    .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
-                    .collect(Collectors.toList());
-            break;
-            case 2: likeablePeople = likeablePeople.stream()
-                    .sorted(Comparator.comparing(LikeablePerson::getCreateDate))
-                    .collect(Collectors.toList());
-            break;
-        }
+        likeablePeopleStream = switch (sortCode) {
+            case 2 -> likeablePeopleStream
+                    .sorted(
+                            Comparator.comparing(LikeablePerson::getId)
+                    );
+            case 3 -> likeablePeopleStream
+                    .sorted(
+                            Comparator.comparing((LikeablePerson lp) -> lp.getFromInstaMember().getLikes()).reversed()
+                                    .thenComparing(Comparator.comparing(LikeablePerson::getId).reversed())
+                    );
+            case 4 -> likeablePeopleStream
+                    .sorted(
+                            Comparator.comparing((LikeablePerson lp) -> lp.getFromInstaMember().getLikes())
+                                    .thenComparing(Comparator.comparing(LikeablePerson::getId).reversed())
+                    );
+            case 5 -> likeablePeopleStream
+                    .sorted(
+                            Comparator.comparing((LikeablePerson lp) -> lp.getFromInstaMember().getGender()).reversed()
+                                    .thenComparing(Comparator.comparing(LikeablePerson::getId).reversed())
+                    );
+            case 6 -> likeablePeopleStream
+                    .sorted(
+                            Comparator.comparing(LikeablePerson::getAttractiveTypeCode)
+                                    .thenComparing(Comparator.comparing(LikeablePerson::getId).reversed())
+                    );
+            default -> likeablePeopleStream;
+        };
 
-        return likeablePeople;
+        return likeablePeopleStream.toList();
     }
 }
