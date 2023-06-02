@@ -1,48 +1,42 @@
-# 할일
+# Like U
+Like U는 인스타그램 계정을 바탕으로 상대방에게 "익명"으로 조용히 호감을 보내는 서비스입니다. 어떤 사람이 누른 좋아요인지 알 수 있는 기존의 서비스와는 다르게 상대방의 인스타그램 아이디를 안다면 조용하게 호감💜🖤을 보낼 수 있습니다 
+## 🔨 Stacks
 
-- [x] 회원가입 폼
-    - [x] 로그인 상태에서 들어올 수 없다.
-    - [x] 폼이 있어야 한다.
-    - [x] input[name="username"] 필드가 있어야 한다.
-    - [x] input[name="password"] 필드가 있어야 한다.
-    - [x] 폼 체크
-- [x] 회원가입 폼 처리
-    - [x] 로그인 상태에서 들어올 수 없다.
-    - [x] 유효성 체크를 해야 한다.
-    - [x] member 테이블에 회원이 저장되어야 한다.
-    - [x] 처리 후에 / 로 이동해야 한다. 302
-    - [x] 회원가입이 완료되었습니다. /member/login 으로 302
-- [x] 로그인 폼
-    - [x] 로그인 상태에서 들어올 수 없다.
-    - [x] 폼이 있어야 한다.
-    - [x] input[name="username"] 필드가 있어야 한다.
-    - [x] input[name="password"] 필드가 있어야 한다.
-    - [x] 폼 체크
-- [x] 로그인 폼 처리(스프링 시큐리티가 알아서 해줌)
-    - [x] 세션에 데이터가 들어있는지 확인
-- [x] 레이아웃 네비바 구현
-    - [x] 로그인 버튼
-    - [x] 회원가입 버튼
-    - [x] 로그아웃 버튼
-- [x] 로그인 후에는 내비바에 로그인된 회원의 username 이 보여야 한다.
-- [x] 정적파일 정리
-    - [x] 두루두루 사용되는 CSS 를 common.css 로 모으기
-    - [x] 두루두루 사용되는 JS 를 common.js 로 모으기
-- [x] toastMsg 에 ttl 기능 추가
-- [x] 인스타그램 회원정보 입력
-    - [x] 입력한 인스타그램 ID가 이미 존재하더라도, 그것의 성별이 아직 U 이면 연결가능
-    - [x] 로그인한 사람만 가능
-    - [x] 아이디
-    - [x] 성별
-- [x] 인스타그램 회원정보 입력 폼 처리
-    - [x] 로그인한 사람만 가능
-    - [x] 아이디
-    - [x] 성별
-    - [x] 회원과 인스타회원의 연결
-    - [ ] 성공했을 때 호감표시 페이지로 이동
-- [x] 본인이 좋아하는 사람 등록 폼
-    - [x] 본인의 인스타그램 회원정보 입력을 완료한 사람만 가능
-    - [x] 인스타그램 아이디
-    - [x] 매력포인트(외모, 성격, 능력)
-- [x] 본인이 좋아하는 사람 등록 폼 처리
-    - [x] 아직 우리 서비스에 등록되지 않은 인스타 유저에게도 호감표시 가능
+### Front
+<img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=HTML5&logoColor=white"> <img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=CSS3&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white"> <img src="https://img.shields.io/badge/thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white">
+
+
+### Back
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Spring Security](https://img.shields.io/badge/spring--security-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![JPA](https://img.shields.io/badge/JPA-green?style=for-the-badge&logo=)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)
+
+## Preview
+### ❤ Main
+
+![image](https://github.com/hye-0000/LikeU/assets/71963159/e7b306c5-b5a0-4ef9-8eb7-0d082244ebf2)
+
+### 🧡 인스타그램 계정 연결
+
+![connect인스타](https://github.com/hye-0000/LikeU/assets/71963159/8d62240b-4f81-4e6d-a554-31f8ca1ec56e)
+
+
+### 💛 연결 후 마이페이지
+![image](https://github.com/hye-0000/LikeU/assets/71963159/4f75b4c5-e4f5-4acd-94c3-1d34543e6e8d)
+
+### 💚 상대방에게 호감 표시하기
+![image](https://github.com/hye-0000/LikeU/assets/71963159/f19baf4b-b2bb-4c66-af33-442e0aa14f5b)
+![image](https://github.com/hye-0000/LikeU/assets/71963159/bbd4c4f1-22f0-4c9b-94fa-db24970f306d)
+
+### 💜 내가 받은 호감 조회하기
+![image](https://github.com/hye-0000/LikeU/assets/71963159/9132c23f-0f32-4571-94a9-12b2f98c62e2)
+
+
+- 상세 기능 목록
+  - 카카오톡/구글/네이버/페이스북 로그인
+  - 인스타그램 계정 연결(테스트 허용 계정만 가능)
+  - 상대방에게 호감 표시
+  - 내가 받은 호감 조회 (성별/호감 유형/ 6가지 정렬기준(최신순/오래된 순/ 인기 많은 순/ 인기 적은 순/ 성별순/ 호감 사유 순)으로 필터링 가능)
